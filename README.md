@@ -16,8 +16,8 @@
 ### Program:
 
 ```
-name : mitta yashaswi
-reg no : 212221230062
+name : MUDI PAVAN 
+reg no : 212221230067
 ```
 
 ```python
