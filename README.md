@@ -1,169 +1,74 @@
-### EX3 Implementation of GSP Algorithm In Python
-### DATE: 10-03-2024
-### AIM: To implement GSP Algorithm In Python.
+### EX4 Implementation of Cluster and Visitor Segmentation for Navigation patterns
+### DATE: 16-03-2024
+### AIM: To implement Cluster and Visitor Segmentation for Navigation patterns in Python.
 ### Description:
-The Generalized Sequential Pattern (GSP) algorithm is a data mining technique used for discovering frequent patterns within a sequence database. It operates by identifying sequences that frequently occur together. GSP works by employing a depth-first search strategy to explore and extract frequent patterns efficiently.
-### Steps:
-1. <strong>Database Scanning:</strong> GSP scans the sequence database to determine the support of each item in the dataset.
-2. <strong>Candidate Generation:</strong> It generates a set of candidate sequences using frequent items found in the previous step.
-3. <strong>Pattern Growth:</strong> It extends the candidate sequences by merging them to form longer patterns, checking their support against a user-defined minimum support threshold.
-4. <strong>Repeat:</strong> The process continues until no new sequences meet the minimum support threshold.
-<p align="justify">
-GSP finds application in various domains such as market basket analysis, web usage mining, bioinformatics, and more. For instance, in retail, GSP can identify common purchasing patterns, helping businesses understand customer behavior for targeted marketing or inventory management.
-</p>
-
+<div align= "justify">Cluster visitor segmentation refers to the process of grouping or categorizing visitors to a website, 
+  application, or physical location into distinct clusters or segments based on various characteristics or behaviors they exhibit. 
+  This segmentation allows businesses or organizations to better understand their audience and tailor their strategies, marketing efforts, 
+  or services to meet the specific needs and preferences of each cluster.</div>
+  
 ### Procedure:
-<p align="justify">
-1. From collections import defaultdict, from itertools import combinations: Imports necessary libraries/modules. defaultdict is
-used to create a dictionary with default values and combinations generates all possible combinations of a sequence.</p>
-<p align="justify">
-2. generate_candidates(dataset, k): Function to generate candidate k-item sequences from a dataset. It loops through each sequence in the
-dataset and finds combinations of length k for each sequence, updating their counts in a dictionary.</p>
-<p align="justify">
-3. gsp(dataset, min_support): Function that implements the Generalized Sequential Pattern (GSP) algorithm. It iterates through increasing
-sequence lengths (k) until no new frequent patterns are found. It calls generate_candidates() to find patterns of varying lengths.</p>
-<p align="justify">
-4. Example dataset for each category: Defines example sequences for top wear, bottom wear, and party wear categories.</p>
-<p align="justify">
-5. Minimum support threshold: Sets the minimum support count required for a pattern to be considered frequent.</p>
-<p align="justify">
-6. Perform GSP algorithm for each category: Applies the GSP algorithm for each category using the defined example datasets and the
-minimum support threshold.</p>
-<p align="justify">
-7. Output the frequent sequential patterns for each category: Prints the frequent sequential patterns 
-    along with their support counts
-for each wear category.</p>
-<p align="justify">
-8. Visulaize the sequence patterns using matplotlib.
-</p>
+1) Read the CSV file: Use pd.read_csv to load the CSV file into a pandas DataFrame.
+2) Define Age Groups by creating a dictionary containing age group conditions using Boolean conditions.
+3) Segment Visitors by iterating through the dictionary and filter the visitors into respective age groups.
+4) Visualize the result using matplotlib.
+
 ### Program:
 
 ```
-name: MUDI PAVAN
-reg no : 212221230067
+name : mitta yashaswi
+reg no : 212221230062
 ```
 
 ```python
-from collections import defaultdict
-from itertools import combinations
+# read the data
+import pandas as pd
+visitor_df = pd.read_csv('/content/clustervisitor.csv')
 
-# Function to generate candidate k-item sequences
-def generate_candidates(dataset, k):
-    candidate_count = defaultdict(int)
+# Perform segmentation based on characteristics (e.g., age groups)
+age_groups = {
+    'Young': visitor_df['Age'] <= 30,
+    'Middle-aged': (visitor_df['Age'] > 30) & (visitor_df['Age'] <= 50),
+    'Elderly': visitor_df['Age'] > 50
+}
 
-    for sequence in dataset:
-        for itemset in combinations(sequence, k):
-            candidate_count[itemset] += 1
+for group, condition in age_groups.items():  
+    visitors_in_group = visitor_df[condition] 
+    print(f"Visitors in {group} age group:")
+    print(visitors_in_group)
 
-    return candidate_count
 
-# Function to perform GSP algorithm
-def gsp(dataset, min_support):
-    # Step 1: Initialize the frequent patterns dictionary
-    frequent_patterns = defaultdict(int)
-
-    # Step 2: Generate frequent 1-item sequences
-    k = 1
-    candidate_count = generate_candidates(dataset, k)
-
-    # Step 3: Prune and update frequent patterns
-    frequent_patterns.update({itemset: count for itemset, count in candidate_count.items() if count >= min_support})
-
-    # Step 4: Generate frequent k-item sequences until no more can be generated
-    while candidate_count:
-        k += 1
-        candidate_count = generate_candidates(dataset, k)
-
-        # Prune and update frequent patterns
-        frequent_patterns.update({itemset: count for itemset, count in candidate_count.items() if count >= min_support})
-
-    return frequent_patterns
-
-# Example dataset for each category
-top_wear_data = [
-    ["blouse", "t-shirt", "tank_top"],
-    ["hoodie", "sweater", "top"],
-    ["hoodie"],
-    ["hoodie", "sweater"]
-    # Add more sequences for top wear
-]
-bottom_wear_data = [
-    ["jeans", "trousers", "shorts"],
-    ["leggings", "skirt", "chinos"],
-    # Add more sequences for bottom wear
-]
-party_wear_data = [
-    ["cocktail_dress", "evening_gown", "blazer"],
-    ["party_dress", "formal_dress", "suit"],
-    ["party_dress", "formal_dress", "suit"],
-    ["party_dress", "formal_dress", "suit"],
-    ["party_dress", "formal_dress", "suit"],
-    ["party_dress"],
-    ["party_dress"],
-    # Add more sequences for party wear
-]
-# Minimum support threshold
-min_support = 2
-# Perform GSP algorithm for each category
-top_wear_result = gsp(top_wear_data, min_support)
-bottom_wear_result = gsp(bottom_wear_data, min_support)
-party_wear_result = gsp(party_wear_data, min_support)
-# Output the frequent sequential patterns for each category
-print("Frequent Sequential Patterns - Top Wear:")
-if top_wear_result:
-    for pattern, support in top_wear_result.items():
-        print(f"Pattern: {pattern}, Support: {support}")
-else:
-    print("No frequent sequential patterns found in Top Wear.")
-print("\nFrequent Sequential Patterns - Bottom Wear:")
-if bottom_wear_result:
-    for pattern, support in bottom_wear_result.items():
-        print(f"Pattern: {pattern}, Support: {support}")
-else:
-    print("No frequent sequential patterns found in Bottom Wear.")
-print("\nFrequent Sequential Patterns - Party Wear:")
-if party_wear_result:
-    for pattern, support in party_wear_result.items():
-        print(f"Pattern: {pattern}, Support: {support}")
-else:
-    print("No frequent sequential patterns found in Party Wear.")
 ```
 ### Output:
 
-<img width="299" alt="wdm 3-2" src="https://github.com/yashaswimitta/WDM_EXP3/assets/94619247/11671824-6f68-4bb5-a191-383dea054055">
+<img width="259" alt="wdm 4-1" src="https://github.com/yashaswimitta/WDM_EXP4/assets/94619247/553ff061-49f2-4d61-9afb-f6489108e8d7">
 
 
 ### Visualization:
 ```python
-import matplotlib.pyplot as plt
+# Create a list to store counts of visitors in each age group
+visitor_counts=[]
 
-# Function to visualize frequent sequential patterns with a line plot
-def visualize_patterns_line(result, category):
-    if result:
-        patterns = list(result.keys())
-        support = list(result.values())
-
-        plt.figure(figsize=(10, 6))
-        plt.plot([str(pattern) for pattern in patterns], support, marker='o', linestyle='-', color='blue')
-        plt.xlabel('Patterns')
-        plt.ylabel('Support Count')
-        plt.title(f'Frequent Sequential Patterns - {category}')
-        plt.xticks(rotation=90)
-        plt.tight_layout()
-        plt.show()
-    else:
-        print(f"No frequent sequential patterns found in {category}.")
-
-# Visualize frequent sequential patterns for each category using a line plot
-visualize_patterns_line(top_wear_result, 'Top Wear')
-visualize_patterns_line(bottom_wear_result, 'Bottom Wear')
-visualize_patterns_line(party_wear_result, 'Party Wear')
+# Count visitors in each age group
+for group,condition in age_groups.items():
+  visitors_in_group=visitor_df[condition]
+  visitor_counts.append(len(visitors_in_group))
+    
+# Define age group labels and plot a bar chart
+age_group_labels=list(age_groups.keys())
+plt.figure(figsize=(8, 6))
+plt.bar(age_group_labels, visitor_counts, color='skyblue')
+plt.xlabel('Age Groups')
+plt.ylabel('Number of Visitors')
+plt.title('Visitor Distribution Across Age Groups')
+plt.show()
 ```
 ### Output:
 
-<img width="314" alt="wdm 3-1" src="https://github.com/yashaswimitta/WDM_EXP3/assets/94619247/fd92717b-0219-4d04-9204-8d6e210e90a2">
+<img width="446" alt="wdm 4-2" src="https://github.com/yashaswimitta/WDM_EXP4/assets/94619247/2b8a076d-b434-4845-a460-662e60be2f2f">
 
 
 ### Result:
+Thus the Implementation of Cluster and Visitor Segmentation for Navigation patterns is executed successfully.
 
-Thus the implementation of the GSP algorithm in python has been successfully executed.
+
